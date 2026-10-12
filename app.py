@@ -17,7 +17,17 @@ MODEL_FILE = "air_quality_prediction_model.joblib"
 
 @st.cache_resource
 def load_model():
-    return joblib.load(MODEL_FILE)
+    loaded_data = joblib.load(MODEL_FILE)
+
+    if isinstance(loaded_data, dict):
+        model = loaded_data.get("model")
+        if model is None:
+            raise ValueError(
+                "Dictionary mein 'model' key nahi mili."
+            )
+        return model
+
+    return loaded_data
 
 if not os.path.exists(MODEL_FILE):
     st.error("Model file nahi mili. GitHub repository mein model file upload karo.")
